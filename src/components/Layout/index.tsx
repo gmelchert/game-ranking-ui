@@ -9,7 +9,7 @@ export function Layout({ children }: LayoutProps) {
         <>
             <Header />
 
-            <main>
+            <main className="overflow-y-auto">
                 {children}
             </main>
         </>

@@ -1,66 +1,102 @@
 import { route } from "preact-router";
 
-const responseHandler = async (r: Response) => {
-    const json = await r.json();
-    if (!json.success && json.needLogin) return route('/sign-in');
-
-    return r;
+interface ApiResponse<R> {
+    success: boolean;
+    message: string;
+    data?: R;
+    error?: { message: string; };
+    needLogin?: boolean;
 }
 
-export const useApi = (endpoint: string) => {
-    const url = import.meta.env.API_URL + endpoint;
+const responseHandler = async (r: Response) => {
+    const json = await r.json() as ApiResponse<any>;
+    if (!json.success && json.needLogin) {
+        route('/sign-in');
+    }
+
+    return json;
+}
+
+export const useApi = <R>(endpoint: string) => {
+    const url = import.meta.env.VITE_API_URL + endpoint;
 
     const headers = new Headers({ 'Content-Type': 'application/json' });
+    
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+        headers.append('authorization', `Bearer ${jwt}`);
+    }
 
     const init: { headers: Headers; method?: string; body?: any } = {
         headers,
     }
 
     return {
-        get: async () => {
+        get: async (): Promise<ApiResponse<R>> => {
             init.method = 'GET';
-            return fetch(url, init)
-                .then(responseHandler)
-                .catch(error => ({
+
+            try {
+                const response = await fetch(url, init);
+                return responseHandler(response);
+            } catch (error) {
+                return ({
                     success: false,
                     message: 'Failed to FETCH().',
-                    error
-                }))
+                    error: {
+                        message: 'Failed to FETCH().',
+                    },
+                })
+            }
         },
-        post: async <B>(body?: B) => {
+        post: async <B>(body?: B): Promise<ApiResponse<R>> => {
             init.method = 'POST';
-            (body) && (init.body = body);
+            (body) && (init.body = JSON.stringify(body));
 
-            return fetch(url, init)
-                .then(responseHandler)
-                .catch(error => ({
+            try {
+                const response = await fetch(url, init);
+                return responseHandler(response);
+            } catch (error) {
+                return ({
                     success: false,
                     message: 'Failed to FETCH().',
-                    error
-                }))
+                    error: {
+                        message: 'Failed to FETCH().',
+                    },
+                })
+            }
         },
-        put: async <B>(body?: B) => {
+        put: async <B>(body?: B): Promise<ApiResponse<R>> => {
             init.method = 'PUT';
-            (body) && (init.body = body);
+            (body) && (init.body = JSON.stringify(body));
 
-            return fetch(url, init)
-                .then(responseHandler)
-                .catch(error => ({
+            try {
+                const response = await fetch(url, init);
+                return responseHandler(response);
+            } catch (error) {
+                return ({
                     success: false,
                     message: 'Failed to FETCH().',
-                    error
-                }))
+                    error: {
+                        message: 'Failed to FETCH().',
+                    },
+                })
+            }
         },
-        delete: async () => {
+        delete: async (): Promise<ApiResponse<R>> => {
             init.method = 'DELETE';
 
-            return fetch(url, init)
-                .then(responseHandler)
-                .catch(error => ({
+            try {
+                const response = await fetch(url, init);
+                return responseHandler(response);
+            } catch (error) {
+                return ({
                     success: false,
                     message: 'Failed to FETCH().',
-                    error
-                }))
+                    error: {
+                        message: 'Failed to FETCH().',
+                    },
+                })
+            }
         },
     }
 }

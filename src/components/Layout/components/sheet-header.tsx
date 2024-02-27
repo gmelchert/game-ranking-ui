@@ -1,3 +1,5 @@
+import { useContext } from "preact/hooks";
+
 import {
     Sheet,
     SheetClose,
@@ -9,11 +11,15 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { Menu, HomeIcon, UserIcon } from "lucide-react"
-import { Link } from "preact-router"
+import { Menu, HomeIcon, UserIcon, LogInIcon } from "lucide-react"
+
 import { SheetLink } from "./sheet-link"
+import { UserLoggedContext } from "@/contexts";
+import { Link } from "preact-router";
 
 export function SheetDemo() {
+    const { userLogged } = useContext(UserLoggedContext);
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -40,14 +46,18 @@ export function SheetDemo() {
                         Home
                     </SheetLink>
 
-                    <SheetLink href="/profile" icon={<UserIcon />}>
+                    {userLogged && <SheetLink href="/profile" icon={<UserIcon />}>
                         Profile
-                    </SheetLink>
+                    </SheetLink>}
+
+                    {!userLogged && <SheetLink href="/sign-in" icon={<LogInIcon />}>
+                        Sign-in
+                    </SheetLink>}
                 </div>
 
-                <SheetFooter>
-                    teste
-                </SheetFooter>
+                {!userLogged &&<SheetFooter className="border-t pt-4">
+                    <Link className="underline" href="/sign-on">Register your account</Link>
+                </SheetFooter>}
             </SheetContent>
         </Sheet>
     )

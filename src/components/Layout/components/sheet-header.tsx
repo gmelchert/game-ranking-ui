@@ -2,9 +2,7 @@ import { useContext } from "preact/hooks";
 
 import {
     Sheet,
-    SheetClose,
     SheetContent,
-    SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
@@ -59,9 +57,11 @@ export function SheetDemo() {
                     </SheetLink>}
                 </div>
 
-                {!userLogged &&<SheetFooter className="border-t pt-4">
-                    <Link className="underline" href="/sign-on">Register your account</Link>
-                </SheetFooter>}
+                <SheetFooter className="border-t pt-4">
+                    <Link className="underline" href="/sign-on">
+                        {!userLogged ? 'Register your account' : 'Logout your profile'}
+                    </Link>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
     )

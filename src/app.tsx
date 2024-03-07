@@ -4,6 +4,7 @@ import { useEffect, useState } from "preact/hooks";
 import { Home } from "./pages/home";
 import { Profile } from "./pages/profile";
 import { SignIn } from "./pages/sign-in";
+import { SignOn } from "./pages/sign-on";
 import { Statistics } from "./pages/statistics";
 
 import { UserLoggedContext } from "./contexts";
@@ -17,7 +18,7 @@ import { getProfile } from "./api-call";
 import { IUserEntity } from "./@types";
 
 export function App() {
-    const [userLogged, setUserLogged] = useState<IUserEntity | null >(null);
+    const [userLogged, setUserLogged] = useState<IUserEntity | null>(null);
 
     const setUser = async () => {
         const {
@@ -38,7 +39,7 @@ export function App() {
             setUser();
         }
     }, [])
-    
+
 
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -49,6 +50,7 @@ export function App() {
                         <Profile path="/profile" />
                         <Statistics path="/create-stat" />
                         <SignIn path="/sign-in" />
+                        <SignOn path="/sign-on" />
                     </Router>
                     <Toaster position="top-center" richColors={true} />
                 </Layout>

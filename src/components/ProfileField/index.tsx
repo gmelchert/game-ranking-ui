@@ -48,13 +48,13 @@ export function ProfileField({
         toast.success(`${inputLabel.toUpperCase()} updated!`, {
             duration: 1500,
         })
-        
+
         localStorage.setItem('jwt', data.accessToken);
         setUserLogged(data.user);
     }
 
     const inputProps: HTMLAttributes<HTMLInputElement> = {
-        className: "bg-blue-950 focus:outline-none font-bold flex-grow",
+        className: "bg-blue-950 focus:outline-none font-bold w-full",
         id: `input-${field}`,
         value: userLogged[field],
         ref: inputRef,

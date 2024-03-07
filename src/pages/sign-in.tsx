@@ -32,7 +32,7 @@ const FormSchema = z.object({
     }),
 })
 
-export function SignIn({}: IPageProps) {
+export function SignIn({ }: IPageProps) {
     const { setUserLogged } = useContext(UserLoggedContext);
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -65,7 +65,7 @@ export function SignIn({}: IPageProps) {
 
     return (
         <>
-            <PageTitle title='Sign in here!' />
+            <PageTitle title='Sign in' />
 
             <section
                 className="rounded p-4 border m-4"

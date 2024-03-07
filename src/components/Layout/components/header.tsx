@@ -1,5 +1,5 @@
-import { Link } from "preact-router"
-import { SheetDemo } from "./sheet-header"
+import { Link } from "preact-router";
+import { SheetDemo } from "./sheet-header";
 
 export function Header() {
     return (

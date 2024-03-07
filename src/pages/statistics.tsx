@@ -1,16 +1,12 @@
-import { useContext } from 'preact/hooks';
-import { route } from 'preact-router';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from "sonner";
 import { z } from "zod";
-import { toast } from "sonner"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
-import { UserLoggedContext } from '@/contexts';
+import { PageTitle } from "@/components/PageTitle";
 
-import { postSignIn } from '@/api-call';
+import { postCounterStrikeStat } from "@/api-call/counter-strike.api";
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import {
     Form,
     FormControl,
@@ -19,22 +15,18 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { PageTitle } from '@/components/PageTitle';
 
-import { IPageProps } from '@/@types';
+import { IPageProps } from "@/@types";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const FormSchema = z.object({
-    login: z.string().min(1, {
-        message: "Login is required.",
-    }),
-    password: z.string().min(6, {
-        message: "Password is required.",
-    }),
+    deaths: z.string().transform(v => parseInt(v)),
+    dmr: z.string().transform(v => parseInt(v)),
+    kills: z.string().transform(v => parseInt(v)),
 })
 
-export function SignIn({}: IPageProps) {
-    const { setUserLogged } = useContext(UserLoggedContext);
-
+export function Statistics({}: IPageProps) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     })
@@ -44,46 +36,47 @@ export function SignIn({}: IPageProps) {
             success,
             error,
             data,
-        } = await postSignIn(body);
+            message,
+        } = await postCounterStrikeStat(body);
 
         if (!success || !data) {
-            return toast.error("Error on singning in.", {
+            return toast.error("Error on creating new stat.", {
                 description: error?.message,
             })
         }
+        
+        form.reset({
+            deaths: 0,
+            dmr: 0,
+            kills: 0,
+        });
 
-        const {
-            user,
-            accessToken,
-        } = data;
-
-        setUserLogged(user);
-        localStorage.setItem('jwt', accessToken);
-
-        route('/profile');
+        toast.success(message, {
+            duration: 1500,
+        })
     }
 
     return (
         <>
-            <PageTitle title='Sign in here!' />
+            <PageTitle title="Create new Statistics" />
 
             <section
                 className="rounded p-4 border m-4"
             >
                 <p className="text-sm text-zinc-400 mb-2">
-                    Enter your email and password to login.
+                    Enter your numbers to create a new record.
                 </p>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
-                            name="login"
+                            name="deaths"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Login</FormLabel>
+                                    <FormLabel>Deaths</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder="example@mail.com" {...field} />
+                                        <Input type="number" min={0} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -91,12 +84,25 @@ export function SignIn({}: IPageProps) {
                         ></FormField>
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="kills"
                             render={({ field }) => (
                                 <FormItem className="mt-4">
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>Kills</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="******" {...field} />
+                                        <Input type="number" min={0} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        ></FormField>
+                        <FormField
+                            control={form.control}
+                            name="dmr"
+                            render={({ field }) => (
+                                <FormItem className="mt-4">
+                                    <FormLabel>DMR</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" min={0} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

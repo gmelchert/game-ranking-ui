@@ -11,7 +11,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { Menu, HomeIcon, UserIcon, LogInIcon } from "lucide-react"
+import { Menu, HomeIcon, UserIcon, LogInIcon, BarChart3 } from "lucide-react"
 
 import { SheetLink } from "./sheet-link"
 import { UserLoggedContext } from "@/contexts";
@@ -45,6 +45,10 @@ export function SheetDemo() {
                     <SheetLink href="/" icon={<HomeIcon />}>
                         Home
                     </SheetLink>
+
+                    {userLogged && <SheetLink href="/create-stat" icon={<BarChart3 />}>
+                        Create new statistics
+                    </SheetLink>}
 
                     {userLogged && <SheetLink href="/profile" icon={<UserIcon />}>
                         Profile

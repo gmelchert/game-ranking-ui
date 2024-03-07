@@ -4,17 +4,20 @@ import { useEffect, useState } from "preact/hooks";
 import { Home } from "./pages/home";
 import { Profile } from "./pages/profile";
 import { SignIn } from "./pages/sign-in";
+import { Statistics } from "./pages/statistics";
 
-import { IUserLogged, UserLoggedContext } from "./contexts";
+import { UserLoggedContext } from "./contexts";
 
 import { ThemeProvider } from "./components/theme-provider";
 import { Layout } from "./components/Layout";
-import { Toaster } from "./components/ui/toaster";
+import { Toaster } from "./components/ui/sonner";
 
 import { getProfile } from "./api-call";
 
+import { IUserEntity } from "./@types";
+
 export function App() {
-    const [userLogged, setUserLogged] = useState<IUserLogged | null >(null);
+    const [userLogged, setUserLogged] = useState<IUserEntity | null >(null);
 
     const setUser = async () => {
         const {
@@ -44,9 +47,10 @@ export function App() {
                     <Router>
                         <Home path="/" />
                         <Profile path="/profile" />
+                        <Statistics path="/create-stat" />
                         <SignIn path="/sign-in" />
                     </Router>
-                    <Toaster />
+                    <Toaster position="top-center" richColors={true} />
                 </Layout>
             </UserLoggedContext.Provider>
         </ThemeProvider>

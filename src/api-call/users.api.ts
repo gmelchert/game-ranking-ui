@@ -9,7 +9,6 @@ interface IDataGetProfile {
 export const getProfile = async () =>
     useApi<IDataGetProfile>('users/profile').get();
 
-
 interface IBodyPutUser {
     image?: string;
     steam?: string;

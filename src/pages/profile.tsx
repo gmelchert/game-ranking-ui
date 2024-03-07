@@ -16,8 +16,6 @@ export function Profile({}: IPageProps) {
         return null;
     }
 
-    console.log(userLogged)
-
     return (
         <>
             <PageTitle title="Profile" />

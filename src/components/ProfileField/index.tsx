@@ -1,19 +1,20 @@
 import { useContext, useRef } from "preact/hooks";
 import { HTMLAttributes } from "preact/compat";
 import { Pen } from "lucide-react";
+import { toast } from 'sonner';
 
 import { UserLoggedContext } from "@/contexts";
 
 import { putUser } from "@/api-call";
-import { useToast } from "../ui/use-toast";
+
 
 import { IUserEntity } from "@/@types";
-import { useDate } from "@/hooks";
+import { ImageDialog } from "./ImageDialog";
 
 interface IProfileFieldProps {
     field: keyof IUserEntity;
     inputLabel: string;
-    variant?: 'image' | 'date'
+    variant?: 'image';
 }
 
 export function ProfileField({
@@ -27,7 +28,6 @@ export function ProfileField({
     }
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const { toast } = useToast();
 
     const onEditHandle = async () => {
         if (!inputRef.current) return;
@@ -43,6 +43,10 @@ export function ProfileField({
             title: `Error on updating ${inputLabel.toUpperCase()}`,
             description: error?.message,
             variant: "destructive",
+        })
+
+        toast.success(`${inputLabel.toUpperCase()} updated!`, {
+            duration: 1500,
         })
         
         localStorage.setItem('jwt', data.accessToken);
@@ -68,6 +72,11 @@ export function ProfileField({
                 </span>
                 <input {...inputProps} />
             </label>
+
+            {(variant && variant === 'image') && (
+                <ImageDialog image={userLogged[field]} />
+            )}
+
             <button
                 className="rounded text-center border px-2 border-zinc-200
                 hover:bg-zinc-200 hover:text-slate-950 transition-colors duration-150"
